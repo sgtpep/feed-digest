@@ -28,7 +28,7 @@ if __name__ == '__main__':
     for html_path in html_paths:
         os.remove(html_path)
 
-    head_html = """\
+    header_html = """\
     <html>
     <head>
     <meta charset="utf-8">
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     <body>
     <h2>%s</h2>
     """
-    head_title = "Feeds Digest"
+    page_title = "Feeds Digest"
 
     feed_lines = open(config.URLS_PATH).read().strip().splitlines()
     feed_lines = [l.rstrip().split(None, 1) for l in feed_lines if not l.lstrip().startswith('#')]
@@ -67,7 +67,7 @@ if __name__ == '__main__':
             f = codecs.open(group_path, 'w', encoding='utf8')
 
             group_title = group_datetime.strftime("%a %-d %b %-H:%M")
-            print >> f, head_html % ("%s &mdash; %s" % (group_title, head_title), group_title)
+            print >> f, header_html % ("%s &mdash; %s" % (group_title, page_title), group_title)
 
             groups.append((group_datetime, group_filename))
 
@@ -97,7 +97,7 @@ if __name__ == '__main__':
     f = codecs.open(index_path, 'w', encoding='utf8')
 
     group_title = group_datetime.strftime("%a %-d %b %-H:%M")
-    print >> f, head_html % (head_title, head_title)
+    print >> f, header_html % (page_title, page_title)
 
     prev_group_datetime = None
     now = datetime.datetime.now()
