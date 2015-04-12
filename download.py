@@ -29,7 +29,7 @@ if __name__ == '__main__':
     cursor.executescript("""
     CREATE TABLE IF NOT EXISTS entries (
         feed_number INTEGER, feed_url TEXT, feed_title TEXT, number INTEGER, url TEXT, title TEXT, added TIMESTAMP,
-        PRIMARY KEY (feed_url, url)
+        PRIMARY KEY (feed_url, url, title)
     );
     CREATE INDEX IF NOT EXISTS entries_order ON entries (feed_number, added, number);
     """)
