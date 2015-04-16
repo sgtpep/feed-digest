@@ -53,5 +53,5 @@ if __name__ == '__main__':
             url = entry.get('link', '')
             title = entry.get('title') or url
             rows.append((feed_number, feed_url, feed_title, number, url, title, added))
-    cursor.executemany("REPLACE INTO entries VALUES (?, ?, ?, ?, ?, ?, ?)", rows)
+    cursor.executemany("""INSERT OR IGNORE INTO entries VALUES (?, ?, ?, ?, ?, ?, ?)""", rows)
     connection.commit()
