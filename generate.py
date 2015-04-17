@@ -37,7 +37,7 @@ if __name__ == '__main__':
     <title>%s</title>
     <style>
     body {
-      padding: 1.5em 1em;
+      margin: 1.5em 1em;
       font: 14px / 1 sans-serif;
     }
     a {
