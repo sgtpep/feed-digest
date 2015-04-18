@@ -1,5 +1,5 @@
 # Feed Digest
-Feed Digest downloads feeds (RSS, Atom, etc.) by cron and generates entries digest as HTML pages for speed overviewing.
+Feed Digest is ultra-minimalist, but efficient feed (RSS, Atom, etc.) reader. It downloads feeds by cron and generates entries digest as HTML pages optimized for speed overviewing.
 
 ## Dependencies
 - Python 2
