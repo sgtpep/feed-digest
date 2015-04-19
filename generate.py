@@ -61,6 +61,7 @@ if __name__ == '__main__':
 
     groups = []
     prev_entry = collections.defaultdict(lambda: None)
+    prev_group_datetime = None
     for entry in entries:
         if entry['group_timestamp'] != prev_entry['group_timestamp']:
             group_datetime = datetime.datetime.utcfromtimestamp(entry['group_timestamp'])
@@ -71,7 +72,10 @@ if __name__ == '__main__':
             group_title = group_datetime.strftime("%a %-d %b %-H:%M")
             print >> f, header_html % ("%s &mdash; %s" % (group_title, page_title), group_title)
 
-            groups.append((group_datetime, group_filename))
+            if not prev_group_datetime or group_datetime.year != prev_group_datetime.year or group_datetime.month != prev_group_datetime.month or group_datetime.day != prev_group_datetime.day:
+                prev_group_datetime = group_datetime
+                groups.append([])
+            groups[len(groups) - 1].append((group_datetime, group_filename))
 
         if entry['feed_url'] != prev_entry['feed_url']:
             feed_title = feed_titles.get(entry['feed_url']) or entry['feed_title']
@@ -95,16 +99,13 @@ if __name__ == '__main__':
 
     print >> f, header_html % (page_title, page_title)
 
-    prev_group_datetime = None
     now = datetime.datetime.now()
-    for group_datetime, group_filename in groups:
-        if not prev_group_datetime or group_datetime.year != prev_group_datetime.year or group_datetime.month != prev_group_datetime.month or group_datetime.day != prev_group_datetime.day:
-            prev_group_datetime = group_datetime
+    for subgroups in groups:
+        print >> f, """<h4>%s</h4>""" % group_datetime.strftime("%a %-d %b")
 
-            print >> f, """<h4>%s</h4>""" % group_datetime.strftime("%a %-d %b")
-
-        link_text = group_datetime.strftime("%-H:%M")
-        if group_datetime > now:
-            group_filename += '?' + now.strftime("%s")
-            link_text = """<i>%s</i>""" % link_text
-        print >> f, """<a href="%s">%s</a>&nbsp;&nbsp;""" % (group_filename, link_text)
+        for group_datetime, group_filename in reversed(subgroups):
+            link_text = group_datetime.strftime("%-H:%M")
+            if group_datetime > now:
+                group_filename += '?' + now.strftime("%s")
+                link_text = """<i>%s</i>""" % link_text
+            print >> f, """<a href="%s">%s</a>&nbsp;&nbsp;""" % (group_filename, link_text)
