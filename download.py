@@ -9,13 +9,6 @@ import config
 
 def parse_feed(feed_url):
     result = feedparser.parse(feed_url, agent="Mozilla/5.0 (X11; Linux x86_64; rv:37.0) Gecko/20100101 Firefox/37.0")
-    if not result.feed.has_key('title'):
-        result.feed['title'] = feed_titles.get(feed_url)
-    if not result.entries:
-        result.entries = [{
-            'title': repr(result.bozo_exception),
-            'link': '#error%s' % added.strftime('%s'),
-        }]
 
     return feed_url, result.feed, result.entries
 
@@ -38,9 +31,6 @@ if __name__ == '__main__':
 
     feed_lines = open(config.URLS_PATH).read().strip().splitlines()
     feed_urls = [l.split(None, 1)[0] for l in feed_lines if not l.lstrip().startswith('#')]
-
-    cursor.execute("SELECT feed_url, feed_title FROM entries GROUP BY feed_url")
-    feed_titles = dict(cursor.fetchall())
 
     socket.setdefaulttimeout(config.SOCKET_TIMEOUT)
 

@@ -77,9 +77,6 @@ if __name__ == '__main__':
             feed_title = feed_titles.get(entry['feed_url']) or entry['feed_title']
             print >> f, """<h4>%s</h4>""" % feed_title
 
-        if entry['url'].startswith('#error') and entry['feed_url'] == prev_entry['feed_url'] and entry['title'] == prev_entry['title']:
-            continue
-
         url = entry['url']
         parsed_url = urlparse.urlparse(url)
         if parsed_url.query:
@@ -89,8 +86,6 @@ if __name__ == '__main__':
                 query = urllib.urlencode(filtered_query, doseq=True)
                 parsed_url = parsed_url._replace(query=query)
                 url = parsed_url.geturl()
-        if url.startswith('#error'):
-            url = entry['feed_url']
         print >> f, """<p><a href="%s">%s</a></p>""" % (url, entry['title'])
 
         prev_entry = entry
