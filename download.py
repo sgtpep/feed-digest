@@ -49,8 +49,6 @@ if __name__ == '__main__':
     pool.close()
     pool.join()
     
-    cursor.execute("DELETE FROM entries WHERE added <= date('now', ?)", ('-' + config.RETENTION_PERIOD,))
-
     rows = []
     for feed_number, (feed_url, feed, entries) in enumerate(results):
         feed_title = feed.get('title') or feed_url

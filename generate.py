@@ -17,8 +17,9 @@ if __name__ == '__main__':
     cursor.execute("""
     SELECT (strftime('%s', added) - 1 + :interval) / :interval * :interval AS group_timestamp, *
     FROM entries
+    WHERE added >= date('now', :period)
     ORDER BY group_timestamp DESC, feed_number, added DESC, number
-    """, {'interval': config.GROUP_INTERVAL})
+    """, {'interval': config.GROUP_INTERVAL, 'period': '-' + config.GENERATE_PERIOD})
     entries = cursor.fetchall()
 
     if not os.path.exists(config.OUTPUT_DIR):
@@ -97,7 +98,6 @@ if __name__ == '__main__':
     index_path = os.path.join(config.OUTPUT_DIR, "index.html")
     f = codecs.open(index_path, 'w', encoding='utf8')
 
-    group_title = group_datetime.strftime("%a %-d %b %-H:%M")
     print >> f, header_html % (page_title, page_title)
 
     prev_group_datetime = None
