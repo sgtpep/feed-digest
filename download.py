@@ -30,6 +30,7 @@ if __name__ == '__main__':
     );
     CREATE INDEX IF NOT EXISTS entries_added ON entries (added);
     CREATE INDEX IF NOT EXISTS entries_order ON entries (feed_number, added, number);
+    CREATE INDEX IF NOT EXISTS entries_stats ON entries (feed_url, published);
     """)
 
     feed_lines = open(config.URLS_PATH).read().strip().splitlines()

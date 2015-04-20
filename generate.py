@@ -68,7 +68,6 @@ if __name__ == '__main__':
             group_filename = group_datetime.strftime("%Y-%m-%d-%H-%M") + ".html"
             group_path = os.path.join(config.OUTPUT_DIR, group_filename)
             f = codecs.open(group_path, 'w', encoding='utf8')
-
             group_title = group_datetime.strftime("%a %-d %b %-H:%M")
             print >> f, header_html % ("%s &mdash; %s" % (group_title, page_title), group_title)
 
@@ -96,7 +95,6 @@ if __name__ == '__main__':
 
     index_path = os.path.join(config.OUTPUT_DIR, "index.html")
     f = codecs.open(index_path, 'w', encoding='utf8')
-
     print >> f, header_html % (page_title, page_title)
 
     now = datetime.datetime.now()
@@ -109,3 +107,24 @@ if __name__ == '__main__':
                 group_filename += '?' + now.strftime("%s")
                 link_text = """<i>%s</i>""" % link_text
             print >> f, """<a href="%s">%s</a>&nbsp;&nbsp;""" % (group_filename, link_text)
+
+    index_path = os.path.join(config.OUTPUT_DIR, "stats.html")
+    f = codecs.open(index_path, 'w', encoding='utf8')
+    print >> f, header_html % ("%s &mdash; %s" % ("Stats", page_title), "Stats")
+
+    cursor.execute("""
+    SELECT feed_url, feed_title, max(published)
+    FROM entries
+    GROUP BY feed_url
+    ORDER BY published
+    """)
+    feeds = cursor.fetchall()
+
+    print >> f, "<table>"
+    print >> f, "<tr><th>Feed</th><th>Last Published</th></tr>"
+    for feed_url, feed_title, last_published in feeds:
+        print >> f, "<tr>"
+        print >> f, """<td><a href="%s">%s</a></td>""" % (feed_url, feed_title)
+        print >> f, """<td>%s</td>""" % last_published
+        print >> f, "</tr>"
+    print >> f, "</table>"
