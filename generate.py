@@ -113,18 +113,25 @@ if __name__ == '__main__':
     print >> f, header_html % ("%s &mdash; %s" % ("Stats", page_title), "Stats")
 
     cursor.execute("""
-    SELECT feed_url, feed_title, max(published)
+    SELECT max(published), count(*), feed_url, feed_title
     FROM entries
     GROUP BY feed_url
     ORDER BY published
     """)
     feeds = cursor.fetchall()
 
-    print >> f, "<table>"
-    print >> f, "<tr><th>Feed</th><th>Last Published</th></tr>"
-    for feed_url, feed_title, last_published in feeds:
+    print >> f, """
+    <table cellspacing="5">
+    <tr>
+    <th>Last Published</th>
+    <th align="right">Count</th>
+    <th align="left">Feed</th>
+    </tr>
+    """
+    for last_published, count, feed_url, feed_title in feeds:
         print >> f, "<tr>"
-        print >> f, """<td><a href="%s">%s</a></td>""" % (feed_url, feed_title)
         print >> f, """<td>%s</td>""" % last_published
+        print >> f, """<td align="right">%d</td>""" % count
+        print >> f, """<td><a href="%s">%s</a></td>""" % (feed_url, feed_title)
         print >> f, "</tr>"
     print >> f, "</table>"
