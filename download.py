@@ -1,9 +1,11 @@
 import os
+import time
 import datetime
 import socket
 import sqlite3
-import feedparser
 from multiprocessing import Pool
+
+import feedparser
 
 import config
 
@@ -23,9 +25,10 @@ if __name__ == '__main__':
 
     cursor.executescript("""
     CREATE TABLE IF NOT EXISTS entries (
-        feed_number INTEGER, feed_url TEXT, feed_title TEXT, number INTEGER, url TEXT, title TEXT, added TIMESTAMP,
+        feed_number INTEGER, feed_url TEXT, feed_title TEXT, number INTEGER, url TEXT, title TEXT, added TIMESTAMP, published TIMESTAMP,
         PRIMARY KEY (feed_url, url)
     );
+    CREATE INDEX IF NOT EXISTS entries_added ON entries (added);
     CREATE INDEX IF NOT EXISTS entries_order ON entries (feed_number, added, number);
     """)
 
@@ -48,6 +51,9 @@ if __name__ == '__main__':
 
             result = cursor.execute("UPDATE entries SET title = ? WHERE feed_url = ? AND url = ?", (title, feed_url, url))
             if not result.rowcount:
-                rows.append((feed_number, feed_url, feed_title, number, url, title, added))
-    cursor.executemany("INSERT INTO entries VALUES (?, ?, ?, ?, ?, ?, ?)", rows)
+                published = entry.get('published_parsed') or entry.get('updated_parsed') or entry.get('created_parsed')
+                published = datetime.datetime.fromtimestamp(time.mktime(published)) if published else added
+
+                rows.append((feed_number, feed_url, feed_title, number, url, title, added, published))
+    cursor.executemany("INSERT INTO entries VALUES (?, ?, ?, ?, ?, ?, ?, ?)", rows)
     connection.commit()
