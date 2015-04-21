@@ -129,6 +129,8 @@ if __name__ == '__main__':
     </tr>
     """
     for last_published, count, feed_url, feed_title in feeds:
+        feed_title = feed_titles.get(feed_url) or feed_title
+
         print >> f, "<tr>"
         print >> f, """<td>%s</td>""" % last_published
         print >> f, """<td align="right">%d</td>""" % count
