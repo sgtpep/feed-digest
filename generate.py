@@ -84,7 +84,7 @@ if __name__ == '__main__':
         parsed_url = urlparse.urlparse(url)
         if parsed_url.query:
             query = urlparse.parse_qs(parsed_url.query)
-            filtered_query = dict((k, v) for k, v in query.iteritems() if not k.startswith('utm_') and (k, v[0]) != ('from', 'rss'))
+            filtered_query = dict((k, v) for k, v in query.iteritems() if not k.startswith('utm_'))
             if query != filtered_query:
                 query = urllib.urlencode(filtered_query, doseq=True)
                 parsed_url = parsed_url._replace(query=query)
