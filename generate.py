@@ -39,7 +39,7 @@ if __name__ == '__main__':
     <style>
     body {
       margin: 25px;
-      font: 14px / 1 sans-serif;
+      font: 14px / 1 Arial, sans-serif;
     }
     a {
       color: inherit;
