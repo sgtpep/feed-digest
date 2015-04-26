@@ -41,7 +41,12 @@ if __name__ == '__main__':
       margin: 25px;
       font: 14px / 1.7 sans-serif;
     }
-    h2, h4 {
+    h1 {
+      font-size: 1.5em;
+      line-height: 1em;
+    }
+    h2 {
+      font-size: 1em;
       margin: 0.3em 0;
     }
     a {
@@ -54,7 +59,7 @@ if __name__ == '__main__':
     </style>
     </head>
     <body>
-    <h2>%s</h2>
+    <h1>%s</h1>
     """
     page_title = "Feeds Digest"
 
@@ -81,7 +86,7 @@ if __name__ == '__main__':
 
         if entry['feed_url'] != prev_entry['feed_url']:
             feed_title = feed_titles.get(entry['feed_url']) or entry['feed_title']
-            print >> f, """<h4>%s</h4>""" % feed_title
+            print >> f, """<h2>%s</h2>""" % feed_title
 
         url = entry['url']
         parsed_url = urlparse.urlparse(url)
@@ -102,7 +107,7 @@ if __name__ == '__main__':
 
     now = datetime.datetime.now()
     for subgroups in groups:
-        print >> f, """<h4>%s</h4>""" % group_datetime.strftime("%a %-d %b")
+        print >> f, """<h2>%s</h2>""" % group_datetime.strftime("%a %-d %b")
 
         for group_datetime, group_filename in reversed(subgroups):
             link_text = group_datetime.strftime("%-H:%M")
