@@ -39,7 +39,10 @@ if __name__ == '__main__':
     <style>
     body {
       margin: 25px;
-      font: 14px / 1 sans-serif;
+      font: 14px / 1.7 sans-serif;
+    }
+    h2, h4 {
+      margin: 0.3em 0;
     }
     a {
       color: inherit;
@@ -89,7 +92,7 @@ if __name__ == '__main__':
                 query = urllib.urlencode(filtered_query, doseq=True)
                 parsed_url = parsed_url._replace(query=query)
                 url = parsed_url.geturl()
-        print >> f, """<p><a href="%s">%s</a></p>""" % (url, entry['title'])
+        print >> f, """<div><a href="%s">%s</a></div>""" % (url, entry['title'])
 
         prev_entry = entry
 
