@@ -53,8 +53,8 @@ if __name__ == '__main__':
       color: inherit;
       text-decoration: none;
     }
-    a:visited {
-      color: dimgrey;
+    a.is-last {
+      font-weight: bold;
     }
     </style>
     </head>
@@ -116,8 +116,36 @@ if __name__ == '__main__':
                 link_text = """<i>%s</i>""" % link_text
             print >> f, """<a href="%s">%s</a>&nbsp;&nbsp;""" % (group_filename, link_text)
 
-    index_path = os.path.join(config.OUTPUT_DIR, "stats.html")
-    f = codecs.open(index_path, 'w', encoding='utf8')
+    print >> f, """
+    <script>
+    (function() {
+    var links = document.getElementsByTagName('a');
+    function onLinkClick(event) {
+      var link = event.target;
+      var href = link.getAttribute('href');
+      document.cookie = "feed_digest_last_href=" + href + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
+      var lastLinks = document.getElementsByClassName('is-last');
+      if (lastLinks.length) lastLinks[0].className = '';
+      link.className = 'is-last';
+    };
+    var lastHref;
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i].split('=');
+      if (cookie[0] == 'feed_digest_last_href') lastHref = cookie[1];
+    }
+    for (var i = 0; i < links.length; i++) {
+      var link = links[i];
+      link.onclick = onLinkClick;
+      var href = link.getAttribute('href');
+      if (href == lastHref) link.className = 'is-last';
+    }
+    })();
+    </script>
+    """
+
+    stats_path = os.path.join(config.OUTPUT_DIR, "stats.html")
+    f = codecs.open(stats_path, 'w', encoding='utf8')
     print >> f, header_html % ("%s &mdash; %s" % ("Stats", page_title), "Stats")
 
     cursor.execute("""
