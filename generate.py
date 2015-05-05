@@ -107,6 +107,7 @@ if __name__ == '__main__':
 
     now = datetime.datetime.now()
     for subgroups in groups:
+        group_datetime = subgroups[0][0]
         print >> f, """<h2>%s</h2>""" % group_datetime.strftime("%a %-d %b")
 
         for group_datetime, group_filename in reversed(subgroups):
