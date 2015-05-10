@@ -56,7 +56,8 @@ if __name__ == '__main__':
     a:visited {
       color: dimgrey;
     }
-    a.is-last {
+    a.is-active {
+      color: inherit;
       font-weight: bold;
     }
     </style>
@@ -128,9 +129,9 @@ if __name__ == '__main__':
       var link = event.target;
       var href = link.getAttribute('href');
       document.cookie = "feed_digest_last_href=" + href + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
-      var lastLinks = document.getElementsByClassName('is-last');
+      var lastLinks = document.getElementsByClassName('is-active');
       if (lastLinks.length) lastLinks[0].className = '';
-      link.className = 'is-last';
+      link.className = 'is-active';
     };
     var lastHref;
     var cookies = document.cookie.split(';');
@@ -142,7 +143,7 @@ if __name__ == '__main__':
       var link = links[i];
       link.onclick = onLinkClick;
       var href = link.getAttribute('href');
-      if (href == lastHref) link.className = 'is-last';
+      if (href == lastHref) link.className = 'is-active';
     }
     })();
     </script>
