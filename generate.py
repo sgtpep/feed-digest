@@ -53,6 +53,9 @@ if __name__ == '__main__':
       color: inherit;
       text-decoration: none;
     }
+    a:visited {
+      color: dimgrey;
+    }
     a.is-last {
       font-weight: bold;
     }
