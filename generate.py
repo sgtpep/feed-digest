@@ -91,7 +91,9 @@ if __name__ == '__main__':
             document.cookie = "feed-digest-filename=" + filename + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
             })();
             </script>
-            """
+
+            <!--#exec cmd="echo \\"<script>var filename = '%s';</script>\\" > /var/tmp/feed-digest-filename.html" --> 
+            """ % group_filename
 
             if not prev_group_datetime or group_datetime.year != prev_group_datetime.year or group_datetime.month != prev_group_datetime.month or group_datetime.day != prev_group_datetime.day:
                 prev_group_datetime = group_datetime
@@ -132,22 +134,28 @@ if __name__ == '__main__':
             print >> f, """<a href="%s">%s</a>&nbsp;&nbsp;""" % (group_filename, link_text)
 
     print >> f, """
+    <!--#exec cmd="cat /var/tmp/feed-digest-filename.html" --> 
+
     <script>
     (function() {
-    var filename;
-    var cookies = document.cookie.split(';');
-    for (var i = 0; i < cookies.length; i++) {
-      var cookie = cookies[i].replace(/^\s*(.+)\s*$/, '$1').split('=');
-      if (cookie[0] == 'feed-digest-filename') filename = cookie[1];
+    if (!filename) {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].replace(/^\s*(.+)\s*$/, '$1').split('=');
+        if (cookie[0] != 'feed-digest-filename') continue;
+
+        var filename = cookie[1];
+        break;
+      }
     }
 
     function onLinkClick(event) {
       var activeLinks = document.getElementsByClassName('is-active');
-      if (activeLinks.length) activeLinks[0].className = '';
+      if (activeLinks.length) activeLinks[0].removeAttribute('class');
 
       var link = event.target;
       link.className = 'is-active';
-    };
+    }
 
     var links = document.getElementsByTagName('a');
     for (var i = 0; i < links.length; i++) {
@@ -155,10 +163,7 @@ if __name__ == '__main__':
       link.onclick = onLinkClick;
 
       var href = link.getAttribute('href');
-      if (href != filename) continue;
-
-      link.className = 'is-active';
-      break;
+      if (href == filename) link.className = 'is-active';
     }
     })();
     </script>
