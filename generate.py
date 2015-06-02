@@ -84,6 +84,15 @@ if __name__ == '__main__':
             group_title = group_datetime.strftime("%a %-d %b %-H:%M")
             print >> f, header_html % ("%s &mdash; %s" % (group_title, page_title), group_title)
 
+            print >> f, """
+            <script>
+            (function() {
+            var filename = location.pathname.replace(/^.*\//, '');
+            document.cookie = "feed-digest-filename=" + filename + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
+            })();
+            </script>
+            """
+
             if not prev_group_datetime or group_datetime.year != prev_group_datetime.year or group_datetime.month != prev_group_datetime.month or group_datetime.day != prev_group_datetime.day:
                 prev_group_datetime = group_datetime
                 groups.append([])
@@ -125,26 +134,31 @@ if __name__ == '__main__':
     print >> f, """
     <script>
     (function() {
-    var links = document.getElementsByTagName('a');
-    function onLinkClick(event) {
-      var link = event.target;
-      var href = link.getAttribute('href');
-      document.cookie = "feed-digest-last-filename=" + href + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
-      var lastLinks = document.getElementsByClassName('is-active');
-      if (lastLinks.length) lastLinks[0].className = '';
-      link.className = 'is-active';
-    };
-    var lastFilename;
+    var filename;
     var cookies = document.cookie.split(';');
     for (var i = 0; i < cookies.length; i++) {
       var cookie = cookies[i].replace(/^\s*(.+)\s*$/, '$1').split('=');
-      if (cookie[0] == 'feed-digest-last-filename') lastFilename = cookie[1];
+      if (cookie[0] == 'feed-digest-filename') filename = cookie[1];
     }
+
+    function onLinkClick(event) {
+      var activeLinks = document.getElementsByClassName('is-active');
+      if (activeLinks.length) activeLinks[0].className = '';
+
+      var link = event.target;
+      link.className = 'is-active';
+    };
+
+    var links = document.getElementsByTagName('a');
     for (var i = 0; i < links.length; i++) {
       var link = links[i];
       link.onclick = onLinkClick;
+
       var href = link.getAttribute('href');
-      if (href == lastFilename) link.className = 'is-active';
+      if (href != filename) continue;
+
+      link.className = 'is-active';
+      break;
     }
     })();
     </script>
