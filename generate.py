@@ -129,22 +129,22 @@ if __name__ == '__main__':
     function onLinkClick(event) {
       var link = event.target;
       var href = link.getAttribute('href');
-      document.cookie = "feed_digest_last_href=" + href + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
+      document.cookie = "feed-digest-last-filename=" + href + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
       var lastLinks = document.getElementsByClassName('is-active');
       if (lastLinks.length) lastLinks[0].className = '';
       link.className = 'is-active';
     };
-    var lastHref;
+    var lastFilename;
     var cookies = document.cookie.split(';');
     for (var i = 0; i < cookies.length; i++) {
-      var cookie = cookies[i].split('=');
-      if (cookie[0] == 'feed_digest_last_href') lastHref = cookie[1];
+      var cookie = cookies[i].replace(/^\s*(.+)\s*$/, '$1').split('=');
+      if (cookie[0] == 'feed-digest-last-filename') lastFilename = cookie[1];
     }
     for (var i = 0; i < links.length; i++) {
       var link = links[i];
       link.onclick = onLinkClick;
       var href = link.getAttribute('href');
-      if (href == lastHref) link.className = 'is-active';
+      if (href == lastFilename) link.className = 'is-active';
     }
     })();
     </script>
