@@ -95,7 +95,7 @@ if __name__ == '__main__':
             })();
             </script>
 
-            <!--#exec cmd="echo \\"<script>var filename = '%s';</script>\\" > /var/tmp/feed-digest-filename.html" --> 
+            <!--#exec cmd="echo \\"<script>var filename = \\\\"%s\\\\";</script>\\" > /var/tmp/feed-digest-filename.html" --> 
             """ % group_filename
 
             if not prev_group_datetime or group_datetime.year != prev_group_datetime.year or group_datetime.month != prev_group_datetime.month or group_datetime.day != prev_group_datetime.day:
