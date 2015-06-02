@@ -72,6 +72,9 @@ if __name__ == '__main__':
     feed_lines = [l.rstrip().split(None, 1) for l in feed_lines if not l.lstrip().startswith('#')]
     feed_titles = dict(l for l in feed_lines if len(l) > 1)
 
+    def escape(string):
+        return string.replace('<', "&lt;").replace('>', "&gt;")
+
     groups = []
     prev_entry = collections.defaultdict(lambda: None)
     prev_group_datetime = None
@@ -102,7 +105,7 @@ if __name__ == '__main__':
 
         if entry['feed_url'] != prev_entry['feed_url']:
             feed_title = feed_titles.get(entry['feed_url']) or entry['feed_title']
-            print >> f, """<h2>%s</h2>""" % cgi.escape(feed_title)
+            print >> f, """<h2>%s</h2>""" % escape(feed_title)
 
         url = entry['url']
         parsed_url = urlparse.urlparse(url)
@@ -113,7 +116,7 @@ if __name__ == '__main__':
                 query = urllib.urlencode(filtered_query, doseq=True)
                 parsed_url = parsed_url._replace(query=query)
                 url = parsed_url.geturl()
-        print >> f, """<div><a href="%s">%s</a></div>""" % (url, cgi.escape(entry['title']))
+        print >> f, """<div><a href="%s">%s</a></div>""" % (url, escape(entry['title']))
 
         prev_entry = entry
 
@@ -195,6 +198,6 @@ if __name__ == '__main__':
         print >> f, "<tr>"
         print >> f, """<td>%s</td>""" % last_published
         print >> f, """<td align="right">%d</td>""" % count
-        print >> f, """<td><a href="%s">%s</a></td>""" % (feed_url, cgi.escape(feed_title))
+        print >> f, """<td><a href="%s">%s</a></td>""" % (feed_url, escape(feed_title))
         print >> f, "</tr>"
     print >> f, "</table>"
