@@ -141,13 +141,13 @@ if __name__ == '__main__':
 
     <script>
     (function() {
-    if (!filename) {
+    if (!window.filename) {
       var cookies = document.cookie.split(';');
       for (var i = 0; i < cookies.length; i++) {
         var cookie = cookies[i].replace(/^\s*(.+)\s*$/, '$1').split('=');
         if (cookie[0] != 'feed-digest-filename') continue;
 
-        var filename = cookie[1];
+        window.filename = cookie[1];
         break;
       }
     }
