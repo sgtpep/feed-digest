@@ -31,6 +31,7 @@ if __name__ == '__main__':
         os.remove(html_path)
 
     header_html = """\
+    <!DOCTYPE html>
     <html>
     <head>
     <meta charset="utf-8">
