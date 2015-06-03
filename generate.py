@@ -90,12 +90,12 @@ if __name__ == '__main__':
             print >> f, """
             <script>
             (function() {
-            var filename = location.pathname.replace(/^.*\//, '');
-            document.cookie = "feed-digest-filename=" + filename + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
+            var lastFilename = location.pathname.replace(/^.*\//, '');
+            document.cookie = "feed-digest-last-filename=" + lastFilename + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
             })();
             </script>
 
-            <!--#exec cmd="echo \\"<script>var filename = \\\\"%s\\\\";</script>\\" > /var/tmp/feed-digest-filename.html" --> 
+            <!--#exec cmd="echo \\"<script>var lastFilename = \\\\"%s\\\\";</script>\\" > /var/tmp/feed-digest-last-filename.html" --> 
             """ % group_filename
 
             if not prev_group_datetime or group_datetime.year != prev_group_datetime.year or group_datetime.month != prev_group_datetime.month or group_datetime.day != prev_group_datetime.day:
@@ -137,17 +137,17 @@ if __name__ == '__main__':
             print >> f, """<a href="%s">%s</a>&nbsp;&nbsp;""" % (group_filename, link_text)
 
     print >> f, """
-    <!--#exec cmd="cat /var/tmp/feed-digest-filename.html" --> 
+    <!--#exec cmd="cat /var/tmp/feed-digest-last-filename.html" --> 
 
     <script>
     (function() {
-    if (!window.filename) {
+    if (!window.lastFilename) {
       var cookies = document.cookie.split(';');
       for (var i = 0; i < cookies.length; i++) {
         var cookie = cookies[i].replace(/^\s*(.+)\s*$/, '$1').split('=');
-        if (cookie[0] != 'feed-digest-filename') continue;
+        if (cookie[0] != 'feed-digest-last-filename') continue;
 
-        window.filename = cookie[1];
+        window.lastFilename = cookie[1];
         break;
       }
     }
@@ -166,7 +166,7 @@ if __name__ == '__main__':
       link.onclick = onLinkClick;
 
       var href = link.getAttribute('href');
-      if (href == filename) link.className = 'is-active';
+      if (href == lastFilename) link.className = 'is-active';
     }
     })();
     </script>
