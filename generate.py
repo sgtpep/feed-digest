@@ -37,7 +37,7 @@ if __name__ == '__main__':
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{}</title>
+    <title>{0}</title>
     <style>
     body {{
       margin: 25px;
@@ -62,10 +62,11 @@ if __name__ == '__main__':
       color: inherit;
       font-weight: bold;
     }}
+    {2}
     </style>
     </head>
     <body>
-    <h1>{}</h1>
+    <h1>{1}</h1>
     """
     page_title = u"Feeds Digest"
 
@@ -87,7 +88,7 @@ if __name__ == '__main__':
             f = codecs.open(group_path, 'w', encoding='utf8')
             group_header = group_datetime.strftime("%a %-d %b %-H:%M")
             group_title = u"{} &mdash; {}".format(group_header, page_title)
-            print >> f, header_html.format(group_title, group_header)
+            print >> f, header_html.format(group_title, group_header, '')
 
             print >> f, u"""
             <script>
@@ -123,7 +124,12 @@ if __name__ == '__main__':
 
     index_path = os.path.join(config.OUTPUT_DIR, "index.html")
     f = codecs.open(index_path, 'w', encoding='utf8')
-    print >> f, header_html.format(page_title, page_title)
+    page_style = u"""
+    a {
+      margin-right: 0.5em;
+    }
+    """
+    print >> f, header_html.format(page_title, page_title, page_style)
 
     now = datetime.datetime.now()
     for subgroups in groups:
@@ -135,7 +141,7 @@ if __name__ == '__main__':
             if group_datetime > now:
                 group_filename += '?' + now.strftime("%s")
                 link_text = u"""<i>{}</i>""".format(link_text)
-            print >> f, u"""<a href="{}">{}</a>&nbsp;&nbsp;""".format(group_filename, link_text)
+            print >> f, u"""<a href="{}">{}</a>""".format(group_filename, link_text)
 
     print >> f, u"""
     <!--#exec cmd="cat /var/tmp/feed-digest-last-filename.html" --> 
@@ -177,7 +183,7 @@ if __name__ == '__main__':
     f = codecs.open(stats_path, 'w', encoding='utf8')
     stats_header = u"Stats"
     stats_title = u"{} &mdash; {}".format(stats_header, page_title)
-    print >> f, header_html.format(stats_title, stats_header)
+    print >> f, header_html.format(stats_title, stats_header, '')
 
     cursor.execute("""
     SELECT max(published), count(*), feed_url, feed_title
@@ -200,7 +206,7 @@ if __name__ == '__main__':
 
         print >> f, u"<tr>"
         print >> f, u"""<td>{}</td>""".format(last_published)
-        print >> f, u"""<td align="right">{}</td>""".format(count)
+        print >> f, u"""<td align="right">{:d}</td>""".format(count)
         print >> f, u"""<td><a href="{}">{}</a></td>""".format(feed_url, escape(feed_title))
         print >> f, u"</tr>"
     print >> f, u"</table>"
