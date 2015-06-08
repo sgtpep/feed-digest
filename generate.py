@@ -1,7 +1,6 @@
 import os
 import sqlite3
 import glob
-import collections
 import datetime
 import codecs
 import cgi
@@ -78,10 +77,10 @@ if __name__ == '__main__':
         return string.replace('<', "&lt;").replace('>', "&gt;")
 
     groups = []
-    prev_entry = collections.defaultdict(lambda: None)
+    prev_entry = {}
     prev_group_datetime = None
     for entry in entries:
-        if entry['group_timestamp'] != prev_entry['group_timestamp']:
+        if entry['group_timestamp'] != prev_entry.get('group_timestamp'):
             group_datetime = datetime.datetime.utcfromtimestamp(entry['group_timestamp'])
             group_filename = group_datetime.strftime("%Y-%m-%d-%H-%M") + ".html"
             group_path = os.path.join(config.OUTPUT_DIR, group_filename)
@@ -105,7 +104,9 @@ if __name__ == '__main__':
                 groups.append([])
             groups[len(groups) - 1].append((group_datetime, group_filename))
 
-        if entry['feed_url'] != prev_entry['feed_url']:
+            prev_entry = {}
+
+        if entry['feed_url'] != prev_entry.get('feed_url'):
             feed_title = feed_titles.get(entry['feed_url']) or entry['feed_title']
             print >> f, u"""<h2>{}</h2>""".format(escape(feed_title))
 
