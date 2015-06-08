@@ -1,6 +1,7 @@
 import os
 import sqlite3
 import glob
+import collections
 import datetime
 import codecs
 import cgi
@@ -77,7 +78,7 @@ if __name__ == '__main__':
         return string.replace('<', "&lt;").replace('>', "&gt;")
 
     groups = []
-    prev_entry = {}
+    prev_entry = collections.defaultdict(lambda: None)
     prev_group_datetime = None
     for entry in entries:
         if entry['group_timestamp'] != prev_entry.get('group_timestamp'):
@@ -104,7 +105,7 @@ if __name__ == '__main__':
                 groups.append([])
             groups[len(groups) - 1].append((group_datetime, group_filename))
 
-            prev_entry = {}
+            prev_entry = collections.defaultdict(lambda: None)
 
         if entry['feed_url'] != prev_entry.get('feed_url'):
             feed_title = feed_titles.get(entry['feed_url']) or entry['feed_title']
