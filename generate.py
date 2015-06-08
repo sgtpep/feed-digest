@@ -81,7 +81,7 @@ if __name__ == '__main__':
     prev_entry = collections.defaultdict(lambda: None)
     prev_group_datetime = None
     for entry in entries:
-        if entry['group_timestamp'] != prev_entry.get('group_timestamp'):
+        if entry['group_timestamp'] != prev_entry['group_timestamp']:
             group_datetime = datetime.datetime.utcfromtimestamp(entry['group_timestamp'])
             group_filename = group_datetime.strftime("%Y-%m-%d-%H-%M") + ".html"
             group_path = os.path.join(config.OUTPUT_DIR, group_filename)
@@ -107,7 +107,7 @@ if __name__ == '__main__':
 
             prev_entry = collections.defaultdict(lambda: None)
 
-        if entry['feed_url'] != prev_entry.get('feed_url'):
+        if entry['feed_url'] != prev_entry['feed_url']:
             feed_title = feed_titles.get(entry['feed_url']) or entry['feed_title']
             print >> f, u"""<h2>{}</h2>""".format(escape(feed_title))
 
