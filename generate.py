@@ -41,7 +41,8 @@ if __name__ == '__main__':
     <style>
     body {{
       margin: 25px;
-      font: 15px / 1.6 sans-serif;
+      font-family: sans-serif;
+      line-height: 1.6;
     }}
     h1 {{
       font-size: 1.5em;
