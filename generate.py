@@ -88,7 +88,7 @@ if __name__ == '__main__':
             group_path = os.path.join(config.OUTPUT_DIR, group_filename)
             f = codecs.open(group_path, 'w', encoding='utf8')
             group_header = group_datetime.strftime("%a %-d %b %-H:%M")
-            group_title = u"{} &mdash; {}".format(group_header, page_title)
+            group_title = u"{} &ndash; {}".format(group_header, page_title)
             print >> f, header_html.format(group_title, group_header, '')
 
             print >> f, u"""
