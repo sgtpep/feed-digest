@@ -15,3 +15,4 @@ Feed Digest is ultra-minimalist, but efficient feed (RSS, Atom, etc.) reader. It
 
 ## Similar Projects
 - [rawdog](http://offog.org/code/rawdog/)
+- [Litenin](http://liten.in/)
