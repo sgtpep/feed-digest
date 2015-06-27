@@ -88,7 +88,7 @@ if __name__ == '__main__':
             group_path = os.path.join(config.OUTPUT_DIR, group_filename)
             f = codecs.open(group_path, 'w', encoding='utf8')
             group_header = group_datetime.strftime("%a %-d %b %-H:%M")
-            group_title = u"{} — {}".format(group_header, page_title)
+            group_title = u"{} &mdash; {}".format(group_header, page_title)
             print >> f, header_html.format(group_title, group_header, '')
 
             print >> f, u"""
@@ -185,7 +185,7 @@ if __name__ == '__main__':
     stats_path = os.path.join(config.OUTPUT_DIR, "stats.html")
     f = codecs.open(stats_path, 'w', encoding='utf8')
     stats_header = u"Stats"
-    stats_title = u"{} — {}".format(stats_header, page_title)
+    stats_title = u"{} &mdash; {}".format(stats_header, page_title)
     print >> f, header_html.format(stats_title, stats_header, '')
 
     cursor.execute("""
