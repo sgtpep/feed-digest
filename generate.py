@@ -205,11 +205,10 @@ if __name__ == '__main__':
     </tr>
     """
     for last_published, count, feed_url, feed_title in feeds:
-        feed_title = feed_titles.get(feed_url) or feed_title
-
         print >> f, u"<tr>"
         print >> f, u"""<td>{}</td>""".format(last_published)
         print >> f, u"""<td align="right">{:d}</td>""".format(count)
+        feed_title = feed_titles.get(feed_url) or feed_title
         print >> f, u"""<td><a href="{}">{}</a></td>""".format(feed_url, escape(feed_title))
         print >> f, u"</tr>"
     print >> f, u"</table>"

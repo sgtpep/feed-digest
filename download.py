@@ -49,12 +49,11 @@ if __name__ == '__main__':
         for number, entry in enumerate(entries):
             url = entry.get('link', '')
             title = entry.get('title') or url
-
             result = cursor.execute("UPDATE entries SET title = ? WHERE feed_url = ? AND url = ?", (title, feed_url, url))
+
             if not result.rowcount:
                 published = entry.get('published_parsed') or entry.get('updated_parsed') or entry.get('created_parsed')
                 published = datetime.datetime.fromtimestamp(time.mktime(published)) if published else added
-
                 rows.append((feed_number, feed_url, feed_title, number, url, title, added, published))
     cursor.executemany("INSERT INTO entries VALUES (?, ?, ?, ?, ?, ?, ?, ?)", rows)
     connection.commit()
