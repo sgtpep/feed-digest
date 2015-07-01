@@ -121,7 +121,7 @@ if __name__ == '__main__':
                 query = urllib.urlencode(filtered_query, doseq=True)
                 parsed_url = parsed_url._replace(query=query)
                 url = parsed_url.geturl()
-        print >> f, u"""<div><a href="{}">{}</a></div>""".format(url, escape(entry['title']))
+        print >> f, u"""<div><a href="{}" rel="noreferrer">{}</a></div>""".format(url, escape(entry['title']))
 
         prev_entry = entry
 
@@ -209,6 +209,6 @@ if __name__ == '__main__':
         print >> f, u"""<td>{}</td>""".format(last_published)
         print >> f, u"""<td align="right">{:d}</td>""".format(count)
         feed_title = feed_titles.get(feed_url) or feed_title
-        print >> f, u"""<td><a href="{}">{}</a></td>""".format(feed_url, escape(feed_title))
+        print >> f, u"""<td><a href="{}" rel="noreferrer">{}</a></td>""".format(feed_url, escape(feed_title))
         print >> f, u"</tr>"
     print >> f, u"</table>"
