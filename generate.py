@@ -99,7 +99,7 @@ if __name__ == '__main__':
             })();
             </script>
             """
-            print >> f, u"""<!--#exec cmd="echo \\"<script>var lastFilename = \\\\"{}\\\\";</script>\\" > /var/tmp/feed-digest-last-filename.html" -->""".format(group_filename)
+            print >> f, u"""<!--#exec cmd="echo \\"<script>var lastFilename = \\\\"{}\\\\";</script>\\" > /var/tmp/feed-digest-last-filename.html; true" -->""".format(group_filename)
 
             if not prev_group_datetime or group_datetime.year != prev_group_datetime.year or group_datetime.month != prev_group_datetime.month or group_datetime.day != prev_group_datetime.day:
                 prev_group_datetime = group_datetime
@@ -147,7 +147,7 @@ if __name__ == '__main__':
             print >> f, u"""<a href="{}">{}</a>""".format(group_filename, link_text)
 
     print >> f, u"""
-    <!--#exec cmd="cat /var/tmp/feed-digest-last-filename.html" --> 
+    <!--#exec cmd="cat /var/tmp/feed-digest-last-filename.html; true" --> 
 
     <script>
     (function() {
