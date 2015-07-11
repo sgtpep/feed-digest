@@ -177,7 +177,8 @@ if __name__ == '__main__':
       link.onclick = onLinkClick;
 
       var href = link.getAttribute('href');
-      if (href == lastFilename) link.className = 'is-active';
+      var path = href.split('?')[0];
+      if (path == lastFilename) link.className = 'is-active';
     }
     })();
     </script>
