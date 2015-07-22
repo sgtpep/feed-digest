@@ -79,6 +79,7 @@ if __name__ == '__main__':
     def escape(string):
         return string.replace('<', "&lt;").replace('>', "&gt;")
 
+    now = datetime.datetime.now()
     groups = []
     prev_entry = collections.defaultdict(lambda: None)
     prev_group_datetime = None
@@ -92,15 +93,16 @@ if __name__ == '__main__':
             group_title = u"{} &mdash; {}".format(group_header, page_title)
             print >> f, header_html.format(group_title, group_header, '')
 
-            print >> f, u"""
-            <script>
-            (function() {
-            var lastFilename = location.pathname.replace(/^.*\//, '');
-            document.cookie = "feed-digest-last-filename=" + lastFilename + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
-            })();
-            </script>
-            """
-            print >> f, u"""<!--#exec cmd="echo \\"<script>var lastFilename = \\\\"{}\\\\";</script>\\" > /var/tmp/feed-digest-last-filename.html; :" -->""".format(group_filename)
+            if group_datetime <= now:
+                print >> f, u"""
+                <script>
+                (function() {
+                var lastFilename = location.pathname.replace(/^.*\//, '');
+                document.cookie = "feed-digest-last-filename=" + lastFilename + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
+                })();
+                </script>
+                """
+                print >> f, u"""<!--#exec cmd="echo \\"<script>var lastFilename = \\\\"{}\\\\";</script>\\" > /var/tmp/feed-digest-last-filename.html; :" -->""".format(group_filename)
 
             if not prev_group_datetime or group_datetime.year != prev_group_datetime.year or group_datetime.month != prev_group_datetime.month or group_datetime.day != prev_group_datetime.day:
                 prev_group_datetime = group_datetime
@@ -135,7 +137,6 @@ if __name__ == '__main__':
     """
     print >> f, header_html.format(page_title, page_title, page_style)
 
-    now = datetime.datetime.now()
     for subgroups in groups:
         group_datetime = subgroups[0][0]
         print >> f, u"""<h2>{}</h2>""".format(group_datetime.strftime("%a %-d %b"))
@@ -174,11 +175,11 @@ if __name__ == '__main__':
     var links = document.getElementsByTagName('a');
     for (var i = 0; i < links.length; i++) {
       var link = links[i];
-      link.onclick = onLinkClick;
-
       var href = link.getAttribute('href');
-      var path = href.split('?')[0];
-      if (path == lastFilename) link.className = 'is-active';
+      if (href.indexOf('?') != -1) continue;
+
+      if (href == lastFilename) link.className = 'is-active';
+      link.onclick = onLinkClick;
     }
     })();
     </script>
