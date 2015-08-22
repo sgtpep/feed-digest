@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+import re
 import sqlite3
 import glob
 import collections
@@ -26,6 +27,11 @@ if __name__ == '__main__':
 
     if not os.path.exists(config.OUTPUT_DIR):
         os.makedirs(config.OUTPUT_DIR)
+
+    index_path = os.path.join(config.OUTPUT_DIR, "index.html")
+    index_html = open(index_path).read()
+    matches = re.search(r"""^<b><a href="(.+?)">""", index_html, flags=re.M)
+    prev_group_filename = matches.group(1) if matches else None
 
     html_paths = glob.glob(os.path.join(config.OUTPUT_DIR, "*.html"))
     for html_path in html_paths:
@@ -60,9 +66,8 @@ if __name__ == '__main__':
     a:visited {{
       color: dimgrey;
     }}
-    a.is-active {{
+    b > a:visited {{
       color: inherit;
-      font-weight: bold;
     }}
     {2}
     </style>
@@ -94,15 +99,7 @@ if __name__ == '__main__':
             print >> f, header_html.format(group_title, group_header, '')
 
             if group_datetime <= now:
-                print >> f, u"""
-                <script>
-                (function() {
-                var lastFilename = location.pathname.replace(/^.*\//, '');
-                document.cookie = "feed-digest-last-filename=" + lastFilename + "; expires=Fri, 31 Dec 9999 23:59:59 GMT";
-                })();
-                </script>
-                """
-                print >> f, u"""<!--#exec cmd="echo \\"<script>var lastFilename = \\\\"{}\\\\";</script>\\" > /var/tmp/feed-digest-last-filename.html; :" -->""".format(group_filename)
+                print >> f, u"""<!--#exec cmd="sed -i 's|^<b>\(.*\)</b>$|\\1|; s|^\(<a href=\\"{}\\".*\)$|<b>\\1</b>|' \${{SCRIPT_FILENAME%/*}}/index.html; :" -->""".format(group_filename)
 
             if not prev_group_datetime or group_datetime.year != prev_group_datetime.year or group_datetime.month != prev_group_datetime.month or group_datetime.day != prev_group_datetime.day:
                 prev_group_datetime = group_datetime
@@ -128,7 +125,6 @@ if __name__ == '__main__':
 
         prev_entry = entry
 
-    index_path = os.path.join(config.OUTPUT_DIR, "index.html")
     f = codecs.open(index_path, 'w', encoding='utf8')
     page_style = u"""
     a {
@@ -146,41 +142,30 @@ if __name__ == '__main__':
             if group_datetime > now:
                 group_filename += '?' + now.strftime("%s")
                 link_text = u"""<i>{}</i>""".format(link_text)
-            print >> f, u"""<a href="{}">{}</a>""".format(group_filename, link_text)
+            group_html = u"""<a href="{}">{}</a>""".format(group_filename, link_text)
+            if group_filename == prev_group_filename:
+                group_html = u"<b>{}</b>".format(group_html)
+            print >> f, group_html
 
     print >> f, u"""
-    <!--#exec cmd="cat /var/tmp/feed-digest-last-filename.html; :" --> 
-
     <script>
     (function() {
-    if (!window.lastFilename) {
-      var cookies = document.cookie.split(';');
-      for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i].replace(/^\s*(.+)\s*$/, '$1').split('=');
-        if (cookie[0] != 'feed-digest-last-filename') continue;
-
-        window.lastFilename = cookie[1];
-        break;
-      }
-    }
-
-    function onLinkClick(event) {
-      var activeLinks = document.getElementsByClassName('is-active');
-      if (activeLinks.length) activeLinks[0].removeAttribute('class');
-
-      var link = event.target;
-      link.className = 'is-active';
-    }
-
     var links = document.getElementsByTagName('a');
-    for (var i = 0; i < links.length; i++) {
-      var link = links[i];
-      var href = link.getAttribute('href');
-      if (href.indexOf('?') != -1) continue;
-
-      if (href == lastFilename) link.className = 'is-active';
-      link.onclick = onLinkClick;
-    }
+    Array.prototype.forEach.call(links, function(link) {
+      link.addEventListener('click', function() {
+        var activeLink = document.querySelector("b > a");
+        if (activeLink) {
+          var activeLinkWrapper = activeLink.parentNode;
+          activeLink.parentNode.parentNode.insertBefore(activeLink, activeLink.parentNode);
+          activeLinkWrapper.parentNode.removeChild(activeLinkWrapper);
+        }
+        var linkWrapper = document.createElement('b');
+        var isLinkActive = link === document.activeElement;
+        link.parentNode.insertBefore(linkWrapper, link);
+        linkWrapper.appendChild(link);
+        if (isLinkActive) link.focus();
+      });
+    });
     })();
     </script>
     """
