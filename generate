@@ -54,6 +54,12 @@ if __name__ == '__main__':
       font-family: sans-serif;
       line-height: 1.6;
     }}
+    body::after {{
+      content: '';
+      display: block;
+      height: 100%;
+      margin-top: -1.6em;
+    }}
     h1 {{
       font-size: 1.5em;
       line-height: 1em;
@@ -93,13 +99,13 @@ if __name__ == '__main__':
             group_datetime = datetime.datetime.utcfromtimestamp(entry['group_timestamp'])
             group_filename = group_datetime.strftime("%Y-%m-%d-%H-%M") + ".html"
             group_path = os.path.join(config.OUTPUT_DIR, group_filename)
-            f = codecs.open(group_path, 'w', encoding='utf8')
+            group_file = codecs.open(group_path, 'w', encoding='utf8')
             group_header = group_datetime.strftime("%a %-d %b %-H:%M")
             group_title = u"{} &mdash; {}".format(group_header, page_title)
-            print >> f, header_html.format(group_title, group_header, '')
+            print >> group_file, header_html.format(group_title, group_header, '')
 
             if group_datetime <= now:
-                print >> f, u"""<!--#exec cmd="sed -i 's|^<b>\(.*\)</b>$|\\1|; s|^\(<a href=\\"{}\\".*\)$|<b>\\1</b>|' \${{SCRIPT_FILENAME%/*}}/index.html; :" -->""".format(group_filename)
+                print >> group_file, u"""<!--#exec cmd="sed -i 's|^<b>\(.*\)</b>$|\\1|; s|^\(<a href=\\"{}\\".*\)$|<b>\\1</b>|' \${{SCRIPT_FILENAME%/*}}/index.html; :" -->""".format(group_filename)
 
             if not prev_group_datetime or group_datetime.year != prev_group_datetime.year or group_datetime.month != prev_group_datetime.month or group_datetime.day != prev_group_datetime.day:
                 prev_group_datetime = group_datetime
@@ -110,7 +116,7 @@ if __name__ == '__main__':
 
         if entry['feed_url'] != prev_entry['feed_url']:
             feed_title = feed_titles.get(entry['feed_url']) or entry['feed_title']
-            print >> f, u"""<h2>{}</h2>""".format(escape(feed_title))
+            print >> group_file, u"""<h2>{}</h2>""".format(escape(feed_title))
 
         url = entry['url']
         parsed_url = urlparse.urlparse(url)
@@ -121,11 +127,11 @@ if __name__ == '__main__':
                 query = urllib.urlencode(filtered_query, doseq=True)
                 parsed_url = parsed_url._replace(query=query)
                 url = parsed_url.geturl()
-        print >> f, u"""<div><a href="{}" rel="noreferrer">{}</a></div>""".format(url, escape(entry['title']))
+        print >> group_file, u"""<div><a href="{}" rel="noreferrer">{}</a></div>""".format(url, escape(entry['title']))
 
         prev_entry = entry
 
-    f = codecs.open(index_path, 'w', encoding='utf8')
+    group_file = codecs.open(index_path, 'w', encoding='utf8')
     page_style = u"""
     a {
       margin-right: 0.5em;
@@ -133,16 +139,12 @@ if __name__ == '__main__':
     b > a:visited {
       color: inherit;
     }
-    .gap {
-      height: 100%;
-      margin-top: 1.6em;
-    }
     """
-    print >> f, header_html.format(page_title, page_title, page_style)
+    print >> group_file, header_html.format(page_title, page_title, page_style)
 
     for subgroups in groups:
         group_datetime = subgroups[0][0]
-        print >> f, u"""<h2>{}</h2>""".format(group_datetime.strftime("%a %-d %b"))
+        print >> group_file, u"""<h2>{}</h2>""".format(group_datetime.strftime("%a %-d %b"))
 
         for group_datetime, group_filename in reversed(subgroups):
             link_text = group_datetime.strftime("%-H:%M")
@@ -152,10 +154,9 @@ if __name__ == '__main__':
             group_html = u"""<a href="{}">{}</a>""".format(group_filename, link_text)
             if group_filename == prev_group_filename:
                 group_html = u"<b>{}</b>".format(group_html)
-            print >> f, group_html
+            print >> group_file, group_html
 
-    print >> f, u"""
-    <div class="gap"></div>
+    print >> group_file, u"""
     <script>
     (function() {
     var links = document.getElementsByTagName('a');
@@ -179,10 +180,10 @@ if __name__ == '__main__':
     """
 
     stats_path = os.path.join(config.OUTPUT_DIR, "stats.html")
-    f = codecs.open(stats_path, 'w', encoding='utf8')
+    group_file = codecs.open(stats_path, 'w', encoding='utf8')
     stats_header = u"Stats"
     stats_title = u"{} &mdash; {}".format(stats_header, page_title)
-    print >> f, header_html.format(stats_title, stats_header, '')
+    print >> group_file, header_html.format(stats_title, stats_header, '')
 
     cursor.execute("""
     SELECT max(published), count(*), feed_url, feed_title
@@ -192,7 +193,7 @@ if __name__ == '__main__':
     """)
     feeds = cursor.fetchall()
 
-    print >> f, u"""
+    print >> group_file, u"""
     <table cellspacing="5">
     <tr>
     <th>Last Published</th>
@@ -201,10 +202,10 @@ if __name__ == '__main__':
     </tr>
     """
     for last_published, count, feed_url, feed_title in feeds:
-        print >> f, u"<tr>"
-        print >> f, u"""<td>{}</td>""".format(last_published)
-        print >> f, u"""<td align="right">{:d}</td>""".format(count)
+        print >> group_file, u"<tr>"
+        print >> group_file, u"""<td>{}</td>""".format(last_published)
+        print >> group_file, u"""<td align="right">{:d}</td>""".format(count)
         feed_title = feed_titles.get(feed_url) or feed_title
-        print >> f, u"""<td><a href="{}" rel="noreferrer">{}</a></td>""".format(feed_url, escape(feed_title))
-        print >> f, u"</tr>"
-    print >> f, u"</table>"
+        print >> group_file, u"""<td><a href="{}" rel="noreferrer">{}</a></td>""".format(feed_url, escape(feed_title))
+        print >> group_file, u"</tr>"
+    print >> group_file, u"</table>"
