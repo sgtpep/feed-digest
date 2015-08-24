@@ -46,6 +46,9 @@ if __name__ == '__main__':
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{0}</title>
     <style>
+    html, body {{
+      height: 100%;
+    }}
     body {{
       margin: 25px;
       font-family: sans-serif;
@@ -65,9 +68,6 @@ if __name__ == '__main__':
     }}
     a:visited {{
       color: dimgrey;
-    }}
-    b > a:visited {{
-      color: inherit;
     }}
     {2}
     </style>
@@ -130,6 +130,13 @@ if __name__ == '__main__':
     a {
       margin-right: 0.5em;
     }
+    b > a:visited {
+      color: inherit;
+    }
+    .gap {
+      height: 100%;
+      margin-top: 1.6em;
+    }
     """
     print >> f, header_html.format(page_title, page_title, page_style)
 
@@ -148,6 +155,7 @@ if __name__ == '__main__':
             print >> f, group_html
 
     print >> f, u"""
+    <div class="gap"></div>
     <script>
     (function() {
     var links = document.getElementsByTagName('a');
