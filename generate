@@ -162,6 +162,8 @@ if __name__ == '__main__':
     var links = document.getElementsByTagName('a');
     Array.prototype.forEach.call(links, function(link) {
       link.addEventListener('click', function() {
+        if (/\?\d+$/.test(link.href)) return;
+
         var activeLink = document.querySelector("b > a");
         if (activeLink) {
           var activeLinkWrapper = activeLink.parentNode;
