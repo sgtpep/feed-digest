@@ -150,8 +150,9 @@ if __name__ == '__main__':
             link_text = group_datetime.strftime("%-H:%M")
             if group_datetime > now:
                 group_filename += '?' + now.strftime("%s")
-                link_text = u"""<i>{}</i>""".format(link_text)
             group_html = u"""<a href="{}">{}</a>""".format(group_filename, link_text)
+            if group_datetime > now:
+                group_html = u"<i>{}</i>".format(group_html)
             if group_filename == prev_group_filename:
                 group_html = u"<b>{}</b>".format(group_html)
             print >> group_file, group_html
