@@ -127,7 +127,8 @@ if __name__ == '__main__':
                 query = urllib.urlencode(filtered_query, doseq=True)
                 parsed_url = parsed_url._replace(query=query)
                 url = parsed_url.geturl()
-        print >> group_file, u"""<div><a href="{}" rel="noreferrer">{}</a></div>""".format(url, escape(entry['title']))
+        title = re.sub(r"<.+?>", '', entry['title'])
+        print >> group_file, u"""<div><a href="{}" rel="noreferrer">{}</a></div>""".format(url, escape(title))
 
         prev_entry = entry
 
