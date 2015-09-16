@@ -50,7 +50,8 @@ if __name__ == '__main__':
         for number, entry in enumerate(entries):
             url = entry.get('link', '')
             title = entry.get('title') or url
-            result = cursor.execute("UPDATE entries SET title = ? WHERE feed_url = ? AND url = ?", (title, feed_url, url))
+            url_base = "://" + url.split("://", 1)[1]
+            result = cursor.execute("UPDATE entries SET title = ? WHERE feed_url = ? AND url IN (?, ?)", (title, feed_url, 'http' + url_base, 'https' + url_base))
 
             if not result.rowcount:
                 published = entry.get('published_parsed') or entry.get('updated_parsed') or entry.get('created_parsed')
