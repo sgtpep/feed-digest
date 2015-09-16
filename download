@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+import re
 import time
 import datetime
 import socket
@@ -45,13 +46,15 @@ if __name__ == '__main__':
     pool.join()
     
     rows = []
+    url_base_regex = re.compile(r"^[^:]+")
     for feed_number, (feed_url, feed, entries) in enumerate(results):
         feed_title = feed.get('title') or feed_url
+        feed_url_base = url_base_regex.sub('', feed_url)
         for number, entry in enumerate(entries):
             url = entry.get('link', '')
             title = entry.get('title') or url
-            url_base = "://" + url.split("://", 1)[1]
-            result = cursor.execute("UPDATE entries SET title = ? WHERE feed_url = ? AND url IN (?, ?)", (title, feed_url, 'http' + url_base, 'https' + url_base))
+            url_base = url_base_regex.sub('', url)
+            result = cursor.execute("UPDATE entries SET title = ? WHERE feed_url IN (?, ?) AND url IN (?, ?)", (title, 'http' + feed_url_base, 'https' + feed_url_base, 'http' + url_base, 'https' + url_base))
             if result.rowcount:
                 continue
 
