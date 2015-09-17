@@ -13,7 +13,7 @@ Feed Digest is an ultra-minimalist, but efficient feed reader of RSS and Atom fe
 5. Symlink directory with generated HTML files to webserver root: `sudo ln -s ~/feed-digest/www/ /var/www/feeds`
 6. Your Feed Digest will be available for reading by http://yourserver/feeds/.
 
-## Similar Projects
+## Similar projects
 - [rawdog](http://offog.org/code/rawdog/)
 - [Litenin](http://liten.in/)
 
