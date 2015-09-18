@@ -62,5 +62,5 @@ if __name__ == '__main__':
             published = datetime.datetime.fromtimestamp(time.mktime(published)) if published else added
             rows.append((feed_number, feed_url, feed_title, number, url, title, added, published))
 
-    cursor.executemany("INSERT INTO entries VALUES (?, ?, ?, ?, ?, ?, ?, ?)", rows)
+    cursor.executemany("INSERT OR REPLACE INTO entries VALUES (?, ?, ?, ?, ?, ?, ?, ?)", rows)
     connection.commit()
