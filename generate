@@ -85,7 +85,7 @@ if __name__ == '__main__':
 
     feed_lines = open(config.URLS_PATH).read().strip().splitlines()
     feed_lines = [i.rstrip().split(None, 1) for i in feed_lines if not i.lstrip().startswith('#')]
-    feed_titles = dict(l for l in feed_lines if len(l) > 1)
+    feed_titles = dict(i for i in feed_lines if len(i) > 1)
 
     def escape(string):
         return string.replace('<', "&lt;").replace('>', "&gt;")
