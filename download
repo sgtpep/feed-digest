@@ -36,7 +36,7 @@ if __name__ == '__main__':
     """)
 
     feed_lines = open(config.URLS_PATH).read().strip().splitlines()
-    feed_urls = [l.split(None, 1)[0] for l in feed_lines if not l.lstrip().startswith('#')]
+    feed_urls = [i.split(None, 1)[0] for i in feed_lines if not i.lstrip().startswith('#')]
 
     socket.setdefaulttimeout(config.SOCKET_TIMEOUT)
 

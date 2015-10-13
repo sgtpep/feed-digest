@@ -84,7 +84,7 @@ if __name__ == '__main__':
     page_title = u"Feeds Digest"
 
     feed_lines = open(config.URLS_PATH).read().strip().splitlines()
-    feed_lines = [l.rstrip().split(None, 1) for l in feed_lines if not l.lstrip().startswith('#')]
+    feed_lines = [i.rstrip().split(None, 1) for i in feed_lines if not i.lstrip().startswith('#')]
     feed_titles = dict(l for l in feed_lines if len(l) > 1)
 
     def escape(string):
