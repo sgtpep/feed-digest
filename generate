@@ -118,17 +118,8 @@ if __name__ == '__main__':
             feed_title = feed_titles.get(entry['feed_url']) or entry['feed_title']
             print >> group_file, u"""<h2>{}</h2>""".format(escape(feed_title))
 
-        url = entry['url']
-        parsed_url = urlparse.urlparse(url)
-        if parsed_url.query:
-            query = urlparse.parse_qs(parsed_url.query)
-            filtered_query = dict((k, v) for k, v in query.iteritems() if not k.startswith('utm_'))
-            if query != filtered_query:
-                query = urllib.urlencode(filtered_query, doseq=True)
-                parsed_url = parsed_url._replace(query=query)
-                url = parsed_url.geturl()
         title = re.sub(r"<.+?>", '', entry['title'])
-        print >> group_file, u"""<div><a href="{}" rel="noreferrer">{}</a></div>""".format(url, escape(title))
+        print >> group_file, u"""<div><a href="{}" rel="noreferrer">{}</a></div>""".format(entry['url'], escape(title))
 
         prev_entry = entry
 
