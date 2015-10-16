@@ -1,14 +1,14 @@
 #!/usr/bin/env python
+import cgi
+import codecs
+import collections
+import datetime
+import glob
 import os
 import re
 import sqlite3
-import glob
-import collections
-import datetime
-import codecs
-import cgi
-import urlparse
 import urllib
+import urlparse
 
 import config
 
