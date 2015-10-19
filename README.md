@@ -5,6 +5,16 @@ Feed Digest is an ultra-minimalist, but efficient feed reader of RSS and Atom fe
 - Python 2+
 - Universal Feed Parser. Available as `feedparser` Python package and `python-feedparser` package on some Linux distos.
 
+## Screenshots
+
+_Index page:_
+
+![screenshot 1](https://github.com/sgtpep/feed-digest/raw/master/screenshots/1.png)
+
+_Hourly entries:_
+
+![screenshot 1](https://github.com/sgtpep/feed-digest/raw/master/screenshots/2.png)
+
 ## Usage
 1. Clone or copy this repository to some place on your server, e.g. `~/feed-digest`.
 2. Copy `config.example.py` to `config.py`, adjust its values if needed.
