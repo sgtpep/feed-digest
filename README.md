@@ -4,6 +4,8 @@ Feed Digest is an ultra-minimalist, but efficient feed reader of RSS and Atom fe
 ## Dependencies
 - Python 2+
 - Universal Feed Parser. Available as `feedparser` Python package and `python-feedparser` package on some Linux distos.
+- (optional) any static web server if you would like to serve the generated webpages.
+- (optional) support for SSI (server-side includes) on a web server for storing the last read page. For example, Apache with mod\_include module, nginx with ngx\_http\_ssi\_module module.
 
 ## Screenshots
 
