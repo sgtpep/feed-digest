@@ -97,7 +97,7 @@ if __name__ == '__main__':
     for entry in entries:
         if entry['group_timestamp'] != prev_entry['group_timestamp']:
             group_datetime = datetime.datetime.utcfromtimestamp(entry['group_timestamp'])
-            group_filename = group_datetime.strftime("%Y-%m-%d-%H-%M") + ".html"
+            group_filename = group_datetime.strftime("%Y-%m-%d-%H-%M") + ".shtml"
             group_path = os.path.join(config.OUTPUT_DIR, group_filename)
             group_file = codecs.open(group_path, 'w', encoding='utf8')
             group_header = group_datetime.strftime("%a %-d %b %-H:%M")
