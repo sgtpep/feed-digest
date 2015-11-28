@@ -39,8 +39,6 @@ if __name__ == '__main__':
 
     header_html = u"""\
     <!DOCTYPE html>
-    <html>
-    <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -78,8 +76,6 @@ if __name__ == '__main__':
     }}
     {2}
     </style>
-    </head>
-    <body>
     <h1>{1}</h1>
     """
     page_title = u"Feeds Digest"
