@@ -27,7 +27,8 @@ _Hourly entries:_
 
 ## Similar projects
 - [rawdog](http://offog.org/code/rawdog/)
-- [Litenin](http://liten.in/)
+- [Litenin](https://github.com/bearfrieze/litenin)
+- [FeedHQ](https://feedhq.org/)
 
 ## License and copyright
 
