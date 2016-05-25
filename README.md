@@ -32,6 +32,9 @@ _Hourly entries:_
 
 - [FeedHQ](https://feedhq.org/)
 - [Litenin](https://github.com/bearfrieze/litenin)
+- [Miniflux](https://miniflux.net/)
+- [feeds](https://github.com/sgtpep/dotfiles/blob/master/.local/bin/feeds)
+- [moonmoon](http://moonmoon.org/)
 - [rawdog](http://offog.org/code/rawdog/)
 
 ## License and copyright
